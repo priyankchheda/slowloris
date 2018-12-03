@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
-
-	"github.com/mrjones/oauth"
 )
 
 func main() {
@@ -25,32 +22,10 @@ func main() {
 		log.Fatal("ACCESS_TOKEN_SECRET env variable is not set")
 	}
 
-	c := oauth.NewConsumer(
-		consumerKey,
-		consumerSecret,
-		oauth.ServiceProvider{
-			RequestTokenUrl:   "https://api.twitter.com/oauth/request_token",
-			AuthorizeTokenUrl: "https://api.twitter.com/oauth/authorize",
-			AccessTokenUrl:    "https://api.twitter.com/oauth/access_token",
-		})
-
-	t := oauth.AccessToken{
-		Token:  accessToken,
-		Secret: accessTokenSecret,
-	}
-
-	client, err := c.MakeHttpClient(&t)
+	client, err := GetAuthenticatedClient(consumerKey, consumerSecret, accessToken, accessTokenSecret)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	response, err := client.Get(
-		"https://api.twitter.com/1.1/statuses/home_timeline.json?count=1")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer response.Body.Close()
-
-	bits, err := ioutil.ReadAll(response.Body)
-	fmt.Println("The newest item in your timeline is: " + string(bits))
+	data := GetSettings(client)
+	fmt.Println("GetSettings return response:", data)
 }
