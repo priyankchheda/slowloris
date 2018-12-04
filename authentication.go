@@ -1,18 +1,13 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/mrjones/oauth"
 )
 
-// GetAuthenticatedClient twitter authentication function
-func GetAuthenticatedClient(consumerKey, consumerSecret, accessToken, accessTokenSecret string) (*http.Client, error) {
-	if consumerKey == "" || consumerSecret == "" || accessToken == "" || accessTokenSecret == "" {
-		log.Fatal("Consumer key/secret and Access token/secret required")
-	}
-
+// GetClient twitter authentication function
+func GetClient(consumerKey, consumerSecret, accessToken, accessTokenSecret string) *http.Client {
 	c := oauth.NewConsumer(
 		consumerKey,
 		consumerSecret,
@@ -27,5 +22,6 @@ func GetAuthenticatedClient(consumerKey, consumerSecret, accessToken, accessToke
 		Secret: accessTokenSecret,
 	}
 
-	return c.MakeHttpClient(&t)
+	client, _ := c.MakeHttpClient(&t)
+	return client
 }

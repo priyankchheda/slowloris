@@ -22,10 +22,11 @@ func main() {
 		log.Fatal("ACCESS_TOKEN_SECRET env variable is not set")
 	}
 
-	client, err := GetAuthenticatedClient(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+	client := GetClient(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+
+	data, err := GetAccountSettings(client)
 	if err != nil {
 		log.Fatal(err)
 	}
-	data := GetSettings(client)
-	fmt.Println("GetSettings return response:", data)
+	fmt.Println("GetAccountSettings return response: ", data)
 }
