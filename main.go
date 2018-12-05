@@ -35,4 +35,10 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("\n\nGetAccountVerifyCredentials return response: \n\n", data)
+
+	data, err = GetStatusesUserTimeline("", "", "", 0, "", false, false, false)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n\nGetStatusesUserTimeline return response: \n\n", data)
 }
