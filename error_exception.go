@@ -26,10 +26,8 @@ type errorJSONResponse struct {
 // CheckForResponseError checks for twitter error response
 func CheckForResponseError(response []byte) error {
 	var jsonObject errorJSONResponse
-	err := json.Unmarshal(response, &jsonObject)
-	if err != nil {
-		return err
-	}
+	json.Unmarshal(response, &jsonObject)
+
 	if len(jsonObject.Errors) > 0 {
 		if jsonObject.Errors[0].Code == 32 {
 			return &authenticationInvalid{jsonObject.Errors[0].Code, jsonObject.Errors[0].Message}

@@ -6,8 +6,10 @@ import (
 	"github.com/mrjones/oauth"
 )
 
+var client *http.Client
+
 // GetClient twitter authentication function
-func GetClient(consumerKey, consumerSecret, accessToken, accessTokenSecret string) *http.Client {
+func GetClient(consumerKey, consumerSecret, accessToken, accessTokenSecret string) {
 	c := oauth.NewConsumer(
 		consumerKey,
 		consumerSecret,
@@ -22,6 +24,5 @@ func GetClient(consumerKey, consumerSecret, accessToken, accessTokenSecret strin
 		Secret: accessTokenSecret,
 	}
 
-	client, _ := c.MakeHttpClient(&t)
-	return client
+	client, _ = c.MakeHttpClient(&t)
 }
