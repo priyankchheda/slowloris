@@ -30,7 +30,9 @@ func CheckForResponseError(response []byte) error {
 
 	if len(jsonObject.Errors) > 0 {
 		if jsonObject.Errors[0].Code == 32 {
-			return &authenticationInvalid{jsonObject.Errors[0].Code, jsonObject.Errors[0].Message}
+			return &authenticationInvalid{
+				jsonObject.Errors[0].Code,
+				jsonObject.Errors[0].Message}
 		}
 	}
 	return nil

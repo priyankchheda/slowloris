@@ -5,10 +5,14 @@ import (
 	"strconv"
 )
 
-// GetAccountSettings is a wrapper over account/settings.
-// https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-settings
+// GetAccountSettings returns settings (including current trend, geo and sleep
+// time information) for the authenticating user. This function is a wrapper
+// over account/settings.
+// API Doc Link: https://developer.twitter.com/en/docs/accounts-and-users/
+// manage-account-settings/api-reference/get-account-settings
 func GetAccountSettings() (string, error) {
-	response, err := client.Get("https://api.twitter.com/1.1/account/settings.json")
+	response, err := client.Get(
+		"https://api.twitter.com/1.1/account/settings.json")
 	if err != nil {
 		return "", err
 	}
@@ -21,10 +25,22 @@ func GetAccountSettings() (string, error) {
 	return string(bits), nil
 }
 
-// GetAccountVerifyCredentials is a wrapper over account/verify_credentials
-// https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
-func GetAccountVerifyCredentials(includeEntities, skipStatus, includeEmail bool) (string, error) {
-	request, err := http.NewRequest("GET", "https://api.twitter.com/1.1/account/verify_credentials.json", nil)
+// GetAccountVerifyCredentials returns representation of the requesting user
+// if authentication is successful; else returns AuthenticationInvalid error.
+// Use this function to test if the supplied user credentials are valid.
+// This funciton is a wrapper over account/verify_credentials
+// API Doc Link: https://developer.twitter.com/en/docs/accounts-and-users/
+// manage-account-settings/api-reference/get-account-verify_credentials
+func GetAccountVerifyCredentials(
+	includeEntities bool,
+	skipStatus bool,
+	includeEmail bool) (string, error) {
+	request, err := http.NewRequest("GET",
+		"https://api.twitter.com/1.1/account/verify_credentials.json", nil)
+	if err != nil {
+		return "", err
+	}
+
 	q := request.URL.Query()
 	q.Add("include_entities", strconv.FormatBool(includeEntities))
 	q.Add("skip_status", strconv.FormatBool(skipStatus))

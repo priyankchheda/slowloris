@@ -6,6 +6,9 @@ import (
 	"os"
 )
 
+// Temp function
+// As this project is supposed to be used as a package, will have to  delete
+// this function in future
 func main() {
 	consumerKey := os.Getenv("CONSUMER_KEY")
 	consumerSecret := os.Getenv("CONSUMER_SECRET")
