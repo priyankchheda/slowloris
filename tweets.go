@@ -1,48 +1,77 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
-	"strconv"
 )
+
+// GetStatusesUserTimelineParameter is a api parameter structure
+// Please follow the Twitter API documentation for more details
+// API Doc Link: https://developer.twitter.com/en/docs/tweets/timelines/
+// api-reference/get-statuses-user_timeline.html
+type GetStatusesUserTimelineParameter struct {
+	UserID         *string `json:"user_id"`
+	ScreenName     *string `json:"screen_name"`
+	SinceID        *string `json:"since_id"`
+	Count          *string `json:"count"`
+	MaxID          *string `json:"max_id"`
+	TrimUser       *string `json:"trim_user"`
+	ExcludeReplies *string `json:"exclude_replies"`
+	IncludeRTS     *string `json:"include_rts"`
+}
 
 // GetStatusesUserTimeline returns a collection of the most recent Tweets
 // posted by the user indicated by the screen_name or user_id parameters.
 // This function is a wrapper over statuses/user_timeline.
 // API Doc Link: https://developer.twitter.com/en/docs/tweets/timelines/
 // api-reference/get-statuses-user_timeline.html
-func GetStatusesUserTimeline(
-	userID string,
-	screenName string,
-	sinceID string,
-	count int,
-	maxID string,
-	trimUser bool,
-	excludeReplies bool,
-	includeRTS bool) (string, error) {
-	request, err := http.NewRequest(
-		"GET",
-		"https://api.twitter.com/1.1/statuses/user_timeline.json",
-		nil)
+func GetStatusesUserTimeline(data []byte) (string, error) {
+	param := GetStatusesUserTimelineParameter{}
+	err := json.Unmarshal(data, &param)
+	if err != nil {
+		return "", nil
+	}
+
+	request, err := http.NewRequest("GET",
+		"https://api.twitter.com/1.1/statuses/user_timeline.json", nil)
+	if err != nil {
+		return "", nil
+	}
+
 	q := request.URL.Query()
+	if param.UserID != nil {
+		q.Add("user_id", *param.UserID)
+	}
 
-	if userID != "" {
-		q.Add("user_id", userID)
+	if param.ScreenName != nil {
+		q.Add("screen_name", *param.ScreenName)
 	}
-	if screenName != "" {
-		q.Add("screen_name", screenName)
+
+	if param.SinceID != nil {
+		q.Add("since_id", *param.SinceID)
 	}
-	if sinceID != "" {
-		q.Add("since_id", sinceID)
+
+	if param.Count != nil {
+		q.Add("count", *param.Count)
 	}
-	if maxID != "" {
-		q.Add("max_id", maxID)
+
+	if param.MaxID != nil {
+		q.Add("max_id", *param.MaxID)
 	}
-	q.Add("count", strconv.Itoa(count))
-	q.Add("trim_user", strconv.FormatBool(trimUser))
-	q.Add("exclude_replies", strconv.FormatBool(excludeReplies))
-	q.Add("include_rts", strconv.FormatBool(includeRTS))
+
+	if param.TrimUser != nil {
+		q.Add("trim_user", *param.TrimUser)
+	}
+
+	if param.ExcludeReplies != nil {
+		q.Add("exclude_replies", *param.ExcludeReplies)
+	}
+
+	if param.IncludeRTS != nil {
+		q.Add("include_rts", *param.IncludeRTS)
+	}
+
 	request.URL.RawQuery = q.Encode()
-
 	response, err := client.Do(request)
 	if err != nil {
 		return "", nil

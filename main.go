@@ -33,13 +33,15 @@ func main() {
 	}
 	fmt.Println("\n\nGetAccountSettings return response: \n\n", data)
 
-	data, err = GetAccountVerifyCredentials(false, true, false)
+	dataparam := `{"include_entities": "true", "include_email": "true"}`
+	data, err = GetAccountVerifyCredentials([]byte(dataparam))
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("\n\nGetAccountVerifyCredentials return response: \n\n", data)
 
-	data, err = GetStatusesUserTimeline("", "", "", 0, "", false, false, false)
+	dataparam = `{"exclude_replies": "false"}`
+	data, err = GetStatusesUserTimeline([]byte(dataparam))
 	if err != nil {
 		log.Fatal(err)
 	}
