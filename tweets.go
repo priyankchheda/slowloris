@@ -29,13 +29,13 @@ func GetStatusesUserTimeline(data []byte) (string, error) {
 	param := GetStatusesUserTimelineParameter{}
 	err := json.Unmarshal(data, &param)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	request, err := http.NewRequest("GET",
 		"https://api.twitter.com/1.1/statuses/user_timeline.json", nil)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	q := request.URL.Query()
@@ -74,7 +74,7 @@ func GetStatusesUserTimeline(data []byte) (string, error) {
 	request.URL.RawQuery = q.Encode()
 	response, err := client.Do(request)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	defer response.Body.Close()
 
