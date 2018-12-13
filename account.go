@@ -105,3 +105,59 @@ func GetAccountVerifyCredentials(data []byte) (string, error) {
 
 	return string(bits), nil
 }
+
+// GetUsersProfileBannerParameter is a api parameter structure.
+// Please follow the Twitter API documentation for more details
+// API Doc Link: https://developer.twitter.com/en/docs/accounts-and-users/
+// manage-account-settings/api-reference/get-users-profile_banner
+type GetUsersProfileBannerParameter struct {
+	UserID     *string `json:"user_id"`
+	ScreenName *string `json:"screen_name"`
+}
+
+// GetUsersProfileBanner returns a map of the available size variations of the
+// specified user's profile banner. If the user has not uploaded a profile
+// banner, a HTTP 404 will be served instead.
+// This function is a wrapper over users/profile_banner
+// API Doc Link: https://developer.twitter.com/en/docs/accounts-and-users/
+// manage-account-settings/api-reference/get-users-profile_banner
+func GetUsersProfileBanner(data []byte) (string, error) {
+	param := GetUsersProfileBannerParameter{}
+	err := json.Unmarshal(data, &param)
+	if err != nil {
+		return "", err
+	}
+
+	request, err := http.NewRequest("GET",
+		"https://api.twitter.com/1.1/users/profile_banner.json", nil)
+	if err != nil {
+		return "", err
+	}
+
+	q := request.URL.Query()
+	if param.UserID != nil {
+		q.Add("user_id", *param.UserID)
+	}
+
+	if param.ScreenName != nil {
+		q.Add("screen_name", *param.ScreenName)
+	}
+
+	request.URL.RawQuery = q.Encode()
+	response, err := client.Do(request)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode == 404 {
+		return "{'data': 'user has not uploaded a profile banner'}", nil
+	}
+
+	bits, err := readResponse(response.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(bits), nil
+}

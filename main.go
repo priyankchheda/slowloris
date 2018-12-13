@@ -46,4 +46,11 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("\n\nGetStatusesUserTimeline return response: \n\n", data)
+
+	dataparam = `{}`
+	data, err = GetUsersProfileBanner([]byte(dataparam))
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("\n\nGetUsersProfileBanner return response: \n\n", data)
 }
