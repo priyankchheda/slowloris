@@ -6,12 +6,22 @@ import (
 )
 
 // authenticationInvalid is custom error for Invalid Authentication
-type authenticationInvalid struct {
+type AuthenticationInvalid struct {
 	Code     int
 	ErrorStr string
 }
 
-func (e *authenticationInvalid) Error() string {
+func (e *AuthenticationInvalid) Error() string {
+	return fmt.Sprintf("code %d: %s", e.Code, e.ErrorStr)
+}
+
+// PageNotFound is custom error for 404NotFound
+type PageNotFound struct {
+	Code     int
+	ErrorStr string
+}
+
+func (e *PageNotFound) Error() string {
 	return fmt.Sprintf("code %d: %s", e.Code, e.ErrorStr)
 }
 
@@ -30,7 +40,13 @@ func CheckForResponseError(response []byte) error {
 
 	if len(jsonObject.Errors) > 0 {
 		if jsonObject.Errors[0].Code == 32 {
-			return &authenticationInvalid{
+			return &AuthenticationInvalid{
+				jsonObject.Errors[0].Code,
+				jsonObject.Errors[0].Message}
+		}
+
+		if jsonObject.Errors[0].Code == 34 {
+			return &PageNotFound{
 				jsonObject.Errors[0].Code,
 				jsonObject.Errors[0].Message}
 		}
