@@ -2,6 +2,7 @@
 {% block content%}
 <div>
   <h3>{{ pet.name|capfirst }}</h3>
+  <img src="{{ pet.image.url }}"></img>
   <p>{{ pet.species }}</p>
   {% if pet.breed %}
   <p>Breed: {{ pet.breed }}</p>

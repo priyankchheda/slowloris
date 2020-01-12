@@ -8,6 +8,7 @@ class Pet(models.Model):
     species = models.CharField(max_length=30)
     breed = models.CharField(max_length=30, blank=True)
     description = models.TextField()
+    image = models.ImageField(upload_to='images/', default='images/default.jpg')
     sex = models.CharField(choices=SEX_CHOICES, max_length=1, blank=True)
     submission_date = models.DateTimeField()
     age = models.IntegerField(null=True)
